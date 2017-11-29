@@ -40,6 +40,25 @@ const getFileNamesFromDir = (dir, description, callback) => {
   });
 };
 
+const resolvePath = (path, description, callback) => {
+  path = _path.normalize(path);
+  fs.stat(path, (err, stats) => {
+    if (err) {
+      console.log('Error trying to read file or folder');
+      throw err
+    };
+    if (stats.isDirectory()) { // Directory
+      getFileNamesFromDir(path, description, (err, fileNames, filesFullPath, description) => {
+        return callback(err, fileNames, filesFullPath, description);
+      });
+    } else if (stats.isFile()) { // File
+      return callback(err, [path], [path], description)
+    } else {
+      throw new Error("Couldn't resolve path");
+    }
+  });
+};
+
 const resultsFunction = (err, result) => {
   if(err) {
     console.log(err);
@@ -49,36 +68,16 @@ const resultsFunction = (err, result) => {
 };
 
 const main = (path, description) => {
-  path = _path.normalize(path);
-  let initialSteps = [];
-  fs.stat(path, (err, stats) => {
-    if (err) {
-      console.log('Error trying to read file or folder');
-      throw err
-    };
-    // File
-    if (stats.isFile()) {
-      initialSteps = [
-        async.constant([path], [path], description),
-      ];
-    }
-    // Directory
-    if (stats.isDirectory()) {
-      initialSteps = [
-        async.constant(path, description),
-        getFileNamesFromDir,
-      ];
-    }
-    async.waterfall(
-      [
-        ...initialSteps,
-        createFilesArray,
-        createPostBody,
-        createPostData
-      ],
-      resultsFunction
-    );
-  });
+  async.waterfall(
+    [
+      async.constant(path, description),
+      resolvePath,
+      createFilesArray,
+      createPostBody,
+      createPostData
+    ],
+    resultsFunction
+  );
 }
 
 main(path, description);
