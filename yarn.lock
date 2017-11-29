@@ -11,6 +11,22 @@ ajv@^5.1.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
+ansi.js@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/ansi.js/-/ansi.js-0.0.5.tgz#e3e9e45eb6977ba0eeeeed11677d12144675348c"
+  dependencies:
+    on-new-line "0.0.1"
+
+ascii-progress@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/ascii-progress/-/ascii-progress-1.0.5.tgz#9610aa127ab794af561e893613c36c906f78d9ee"
+  dependencies:
+    ansi.js "0.0.5"
+    end-with "^1.0.2"
+    get-cursor-position "1.0.3"
+    on-new-line "1.0.0"
+    start-with "^1.0.2"
+
 asn1@~0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.3.tgz#dac8787713c9966849fc8180777ebe9c1ddf3b86"
@@ -95,6 +111,10 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
+end-with@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/end-with/-/end-with-1.0.2.tgz#a432755ab4f51e7fc74f3a719c6b81df5d668bdc"
+
 extend@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
@@ -122,6 +142,10 @@ form-data@~2.3.1:
     asynckit "^0.4.0"
     combined-stream "^1.0.5"
     mime-types "^2.1.12"
+
+get-cursor-position@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/get-cursor-position/-/get-cursor-position-1.0.3.tgz#0e41d60343b705836a528d69a5e099e2c5108d63"
 
 getpass@^0.1.1:
   version "0.1.7"
@@ -212,6 +236,14 @@ oauth-sign@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
+on-new-line@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/on-new-line/-/on-new-line-0.0.1.tgz#99339cb06dcfe3e78d6964a2ef2af374a145f8fb"
+
+on-new-line@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/on-new-line/-/on-new-line-1.0.0.tgz#8585bc2866c8c0e192e410a6d63bdd1722148ae7"
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -274,6 +306,10 @@ sshpk@^1.7.0:
     ecc-jsbn "~0.1.1"
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
+
+start-with@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/start-with/-/start-with-1.0.2.tgz#a069a5f46a95fca7f0874f85a28f653d0095c267"
 
 stringstream@~0.0.5:
   version "0.0.5"
