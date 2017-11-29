@@ -2,21 +2,23 @@ const request = require('request');
 const Readable = require('stream').Readable;
 const ProgressBar = require('ascii-progress');
 const API_URL = 'https://api.github.com/gists';
+
 /**
  * Api to upload gist data through HTTP POST.
  * @module api
  */
 
- const progressBar = new ProgressBar({
-   schema: 'Uploading :bar :percent :elapseds',
-   total: 100,
- });
-
 /**
 * postData makes an HTTP POST to uploa the gist data.
 * @param  {Object} data object containing gist data
 */
-module.exports.postData = (data) => {
+// module.exports.postData = (data, callback) => {
+const postData = (data, callback) => {
+  const progressBar = new ProgressBar({
+    schema: 'Completed :bar :percent :elapseds',
+    total: 100,
+  });
+
   const stringifiedData = JSON.stringify(data);
   const size = Buffer.byteLength(stringifiedData);
 
@@ -46,16 +48,22 @@ module.exports.postData = (data) => {
 
   const httpRequest = stream.pipe(request.post(postOptions, (err, res, body) => {
     if (err) {
-      console.log('Error', err);
       progressBar.completed = true;
       progressBar.clear();
-      return;
+      return callback(err)
     }
+    // res.statusCode = 500;
     if (res && (res.statusCode === 200 || res.statusCode === 201)) {
-      console.log(body.html_url);
+      return callback(null, body.html_url)
+    } else {
+      return callback(new Error("Couldn't upload file to GitHub"))
     }
   })).on('data', (chunk) => {
       bytesWritten += chunk;
       progress = (bytesWritten.length * 100) / size;
   });
+}
+
+module.exports = {
+  postData,
 }

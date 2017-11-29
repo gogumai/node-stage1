@@ -12,7 +12,8 @@ const createFile = (fileName, content) => ({
   [fileName]: { content }
 });
 
-const createPostBody = (files, description, callback) => callback(null, createBody(files, description));
+const createPostBody = (files, description, callback) =>
+  callback(null, createBody(files, description));
 const createPostData = (data, callback) => Api.postData(data, callback);
 const createFilesArray = (fileNames, filesFullPath, description, callback) => {
   // Read file contents to make File object array
