@@ -48,6 +48,8 @@ module.exports = {
     const httpRequest = stream.pipe(request.post(postOptions, (err, res, body) => {
       if (err) {
         console.log('Error', err);
+        progressBar.completed = true;
+        progressBar.clear();
         return;
       }
       if (res && (res.statusCode === 200 || res.statusCode === 201)) {
