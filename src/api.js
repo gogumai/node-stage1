@@ -1,6 +1,7 @@
 const request = require('request');
-const Readable = require('stream').Readable;
+const { Readable } = require('stream');
 const ProgressBar = require('ascii-progress');
+
 const API_URL = 'https://api.github.com/gists';
 
 /**
@@ -22,7 +23,6 @@ const postData = (data, callback) => {
   const stringifiedData = JSON.stringify(data);
   const size = Buffer.byteLength(stringifiedData);
 
-  // ------- ProgressBar stuff -------
   let bytesWritten = 0;
   let progress = 0;
   const ProgressBarInterval = setInterval(() => {
@@ -31,39 +31,37 @@ const postData = (data, callback) => {
       clearInterval(ProgressBarInterval);
     }
   }, 100);
-  // ----- End ProgressBar stuff -----
 
-  var postOptions = {
+  const postOptions = {
     url: API_URL,
     json: true,
     headers: {
       'content-type': 'application/json',
       'User-Agent': 'gogumai',
-    }
+    },
   };
 
-  const stream = new Readable;
+  const stream = new Readable();
   stream.push(stringifiedData); // the string to be on the stream
   stream.push(null); // indicates end-of-file - the end of the stream
 
-  const httpRequest = stream.pipe(request.post(postOptions, (err, res, body) => {
+  stream.pipe(request.post(postOptions, (err, res, body) => {
     if (err) {
       progressBar.completed = true;
       progressBar.clear();
-      return callback(err)
+      return callback(err);
     }
     // res.statusCode = 500;
     if (res && (res.statusCode === 200 || res.statusCode === 201)) {
-      return callback(null, body.html_url)
-    } else {
-      return callback(new Error("Couldn't upload file to GitHub"))
+      return callback(null, body.html_url);
     }
+    return callback(new Error("Couldn't upload file to GitHub"));
   })).on('data', (chunk) => {
-      bytesWritten += chunk;
-      progress = (bytesWritten.length * 100) / size;
+    bytesWritten += chunk;
+    progress = (bytesWritten.length * 100) / size;
   });
-}
+};
 
 module.exports = {
   postData,
-}
+};
