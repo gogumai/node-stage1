@@ -1,6 +1,6 @@
 const fs = require('fs');
 const async = require('async');
-const _path = require('path');
+const pathLib = require('path');
 const Api = require('./api');
 
 /**
@@ -9,16 +9,16 @@ const Api = require('./api');
  * @module utils
  */
 
- /**
- * This function builds the object that ends beign uploaded
- * @param {array} files array that contains files objects
- * @param {string} description description of the gist
- * @return {Object} structure of a gist as an object
- */
+/**
+* This function builds the object that ends being uploaded
+* @param {array} files array that contains files objects
+* @param {string} description description of the gist
+* @return {Object} structure of a gist as an object
+*/
 const createBody = (files, description = '') => ({
   description,
   public: true,
-  files: files.reduce((acc, file) => ({ ...acc, ...file}), {})
+  files: files.reduce((acc, file) => ({ ...acc, ...file }), {}),
 });
 
 /**
@@ -28,11 +28,11 @@ const createBody = (files, description = '') => ({
 * @return {Object} structure of a file as an object
 */
 const createFile = (fileName, content) => ({
-  [fileName]: { content }
+  [fileName]: { content },
 });
 
 /**
-* This function acts as an intermediary in the chain of async's waterfall method
+* This function acts as an intermediary in the chain of async's waterfall method.
 * It builds the body of the post to pass it to the next function in the chain
 * @see createBody
 * @param {array} files the name of the file
@@ -61,7 +61,6 @@ const createPostData = (data, callback) => Api.postData(data, callback);
 * @return {Callback} async's waterfall callback
 */
 const createFilesArray = (fileNames, filesFullPath, description, callback) => {
-  // Read file contents to make File object array
   async.map(
     filesFullPath,
     fs.readFile,
@@ -69,12 +68,12 @@ const createFilesArray = (fileNames, filesFullPath, description, callback) => {
       err,
       contents.map((content, i) => createFile(fileNames[i], content.toString().trim())),
       description,
-    )
-  )
+    ),
+  );
 };
 
 /**
-* This function reads a given directoy to get file names
+* This function reads a given directory to get file names
 * @param {string} dir the files names
 * @param {string} description description of the gist
 * @param {Callback} callback async's waterfall callback.
@@ -82,34 +81,32 @@ const createFilesArray = (fileNames, filesFullPath, description, callback) => {
 */
 const getFileNamesFromDir = (dir, description, callback) => {
   fs.readdir(dir, (err, fileNames) => {
-    const filesFullPath = fileNames.map(base => _path.format({ dir, base }));
-    callback(err, fileNames, filesFullPath, description);
+    const filesFullPath = fileNames.map(base => pathLib.format({ dir, base }));
+    return callback(err, fileNames, filesFullPath, description);
   });
 };
 
 /**
-* This function takes a given path and resolves if it is a file or a directory
+* This function takes a given path and resolves if it's a file or a directory
 * @param {string} path the path to resolve
 * @param {string} description description of the gist
 * @param {Callback} callback async's waterfall callback.
 * @return {Callback} async's waterfall callback
 */
 const resolvePath = (path, description, callback) => {
-  path = _path.normalize(path);
-  fs.stat(path, (err, stats) => {
-    if (err) {
-      console.log('Error trying to read file or folder');
-      throw err
-    };
-    if (stats.isDirectory()) { // Directory
-      getFileNamesFromDir(path, description, (err, fileNames, filesFullPath, description) => {
-        return callback(err, fileNames, filesFullPath, description);
-      });
-    } else if (stats.isFile()) { // File
-      return callback(err, [path], [path], description)
-    } else {
-      throw new Error("Couldn't resolve path");
+  const normalizedPath = pathLib.normalize(path);
+  fs.stat(normalizedPath, (err, stats) => {
+    if (err) return callback(err);
+    if (stats.isDirectory()) {
+      return getFileNamesFromDir(
+        normalizedPath,
+        description,
+        callback,
+      );
+    } else if (stats.isFile()) {
+      return callback(err, [normalizedPath], [normalizedPath], description);
     }
+    return callback(new Error("Couldn't resolve path"));
   });
 };
 
@@ -118,4 +115,4 @@ module.exports = {
   createFilesArray,
   createPostBody,
   createPostData,
-}
+};
