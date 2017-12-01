@@ -51,7 +51,6 @@ const postData = (data, callback) => {
       progressBar.clear();
       return callback(err);
     }
-    // res.statusCode = 500;
     if (res && (res.statusCode === 200 || res.statusCode === 201)) {
       return callback(null, body.html_url);
     }

@@ -48,7 +48,6 @@ const main = (path, description) => {
     (err, result) => {
       if (err) {
         console.log('Something wrong happened: ', err.message);
-        // Ask the user for retry
         prompt.get(schema, (error, userInput) => {
           if (userInput && userInput.retry === 'y') {
             console.log('Retrying...');

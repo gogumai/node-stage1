@@ -96,16 +96,14 @@ const getFileNamesFromDir = (dir, description, callback) => {
 const resolvePath = (path, description, callback) => {
   const normalizedPath = pathLib.normalize(path);
   fs.stat(normalizedPath, (err, stats) => {
-    if (err) {
-      return callback(err);
-    }
-    if (stats.isDirectory()) { // Directory
+    if (err) return callback(err);
+    if (stats.isDirectory()) {
       return getFileNamesFromDir(
         normalizedPath,
         description,
         callback,
       );
-    } else if (stats.isFile()) { // File
+    } else if (stats.isFile()) {
       return callback(err, [normalizedPath], [normalizedPath], description);
     }
     return callback(new Error("Couldn't resolve path"));
